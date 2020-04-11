@@ -3,7 +3,7 @@ let app = require('express')();
 let server = require('http').Server(app);
 let io = require('socket.io')(server);
 
-server.listen(80);
+server.listen(3001);
 
 let connections = []
 const players = []
@@ -26,9 +26,16 @@ io.on('connection', function (socket) {
     console.log('Connected: %s sockets connected', connections.length)
     console.log('New connection id: %s', socket.id)
 
-    socket.on('join', function (name) {
-        console.log('Player joined: ' + name);
-        socket.emit('news', { message: 'Player joined: ' + name });
+    socket.on('disconnect', (data) => {
+        connections.splice(connections.indexOf(socket), 1)
+        console.log('Disconnected: %s sockets connected', connections.length)
+    })
+
+    socket.on('join', function (data) {
+        console.log('Player joined: ' + data.name);
+        players.push(data.name)
+        io.emit('news', { message: 'Player joined: ' + data.name, players: players });
+        console.log(players)
     });
 });
 
