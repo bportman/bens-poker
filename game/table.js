@@ -20,10 +20,11 @@ const rounds = {
 }
 
 class Table {
-    constructor({ seats, littleBlind, bigBlind }) {
+    constructor({ seats, io, littleBlind, bigBlind }) {
         this.seats = seats
         this.players = Array(seats).fill(null)
         this.community = []
+        this.io = io
         this.littleBlind = littleBlind
         this.bigBlind = bigBlind
         this.deck = new Deck
@@ -48,6 +49,10 @@ class Table {
             }
         }
         return emptySeatIndexes[Math.floor(Math.random() * emptySeatIndexes.length)]
+    }
+
+    emitSeating() {
+        this.io.emit('seating', this.players)
     }
 
     logPlayers() {

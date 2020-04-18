@@ -8,6 +8,7 @@ const socket = io.connect('localhost:3001')
 function App() {
 
   let [joined, setJoined] = useState(false)
+  let [started, setStarted] = useState(false)
   let [name, setName] = useState("")
   let [players, setPlayers] = useState([])
   let [message, setMessage] = useState("")
@@ -17,6 +18,15 @@ function App() {
     socket.emit('join', { name: name })
     console.log('Joining game: ' + name)
     setJoined(true)
+  }
+
+  const handleStartGame = () => {
+    if (players.length >= 2) {
+      socket.emit('start', {})
+      setStarted(true)
+    } else {
+      setMessage('Game cannot being without at least 2 players.')
+    }
   }
 
   useEffect(() => {
@@ -30,11 +40,7 @@ function App() {
 
   return (
     <div className="App">
-      {!joined && (<Splash onSubmit={handleSubmit} name={name} setName={setName} />)}
-      {joined && (<div><p>Players:</p><ul>
-        {players && players.map(player => (<li>{player}</li>))}
-      </ul></div>)}
-      {joined && message && (<p>{message}</p>)}
+      {joined ? (<Table players={players} message={message} started={started} socket={socket} onStartGame={handleStartGame} />) : (<Splash onSubmit={handleSubmit} name={name} setName={setName} />)}
     </div>
   );
 }

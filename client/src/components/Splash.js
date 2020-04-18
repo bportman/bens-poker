@@ -34,7 +34,6 @@ const Splash = ({ onSubmit, name, setName }) => {
     const classes = useStyles();
     return (<div className={classes.splash}>
         <Card className={classes.card}>
-            {/* <input name="name" type="text" value={name} onChange={(e) => setName(e.target.value)}></input> */}
             <CardContent>
                 <Typography variant="h5" component="h2">
                     Hello and welcome to Ben's Poker

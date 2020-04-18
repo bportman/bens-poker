@@ -1,7 +1,8 @@
 class Player {
-    constructor({ name, buyin }) {
+    constructor({ name, socket, buyin }) {
         this.name = name
         this.chips = buyin
+        this.socket = socket
         this.hand = []
         this.bet = 0
         this.lastAction = null

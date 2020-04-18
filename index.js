@@ -13,13 +13,7 @@ const buyin = 1500
 const startingLittleBlind = 10
 const startingBigBlind = 20
 
-// let game = new Game({
-//     players: players,
-//     seats: seats,
-//     buyin: buyin,
-//     startingLittleBlind: startingLittleBlind,
-//     startingBigBlind: startingBigBlind
-// })
+
 
 io.on('connection', function (socket) {
     connections.push(socket)
@@ -33,9 +27,26 @@ io.on('connection', function (socket) {
 
     socket.on('join', function (data) {
         console.log('Player joined: ' + data.name);
-        players.push(data.name)
-        io.emit('news', { message: 'Player joined: ' + data.name, players: players });
+        players.push({ name: data.name })// socket: socket })
+        io.emit('news', { message: 'Player joined: ' + data.name, players: players.map(player => player.name) });
         console.log(players)
     });
+
+    socket.on('start', function () {
+        if (players.length >= 2) {
+            console.log('Starting game with players: ' + players.join(', '))
+            let game = new Game({
+                io: io,
+                players: players,
+                seats: seats,
+                buyin: buyin,
+                startingLittleBlind: startingLittleBlind,
+                startingBigBlind: startingBigBlind
+            })
+            game.init()
+        } else {
+            console.log('Game cannot start without at least 2 players')
+        }
+    })
 });
 
